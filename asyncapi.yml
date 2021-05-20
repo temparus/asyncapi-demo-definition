@@ -1,0 +1,65 @@
+asyncapi: '2.0.0'
+info:
+  title: Demo asyncapi Definition
+  version: '1.0.0'
+  license:
+    name: © Copyright EscapeEngineers
+
+servers:
+  default:
+    url: localhost:1883
+    protocol: mqtt
+    protocolVersion: '3.1.1'
+    description: Broker for local development.
+
+defaultContentType: application/json
+
+x-deviceIds:
+  - demodevice3
+
+channels:
+  demo/{ownDeviceId}/topic1:
+    description: Demo topic 1
+    x-name: demoTopic1
+    parameters:
+      ownDeviceId:
+        description: Own device ID which is filled in by the generator during the generation process.
+        schema:
+          type: string
+          enum:
+            - demodevice1
+            - demodevice2
+            - demodevice3
+    publish:
+      traits:
+        - $ref: traits.yml#/defaultOperationTrait
+      message:
+        name: demoTopic1
+        title: Message for demo topic 1
+        summary: A message for demo topic 1.
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            demoValue:
+              type: boolean
+              description: just some value.
+
+  demo/testdevice1/topic2:
+    description: Demo topic 2
+    x-name: demoTopic2
+    subscribe:
+      traits:
+        - $ref: traits.yml#/defaultOperationTrait
+      message:
+        name: demoTopic2
+        title: Message for demo topic 2
+        summary: A message for demo topic 2.
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            someState:
+              type: string
+              description: just some state
+              enum: [idle, running, cooldown, fault]
